@@ -1,5 +1,6 @@
 import java.util.Iterator;
 import java.util.PriorityQueue;
+import java.util.Queue;
 import java.util.Stack;
 
 /**
@@ -8,41 +9,49 @@ import java.util.Stack;
 public class UCS_Searcher implements Searcher {
 	private String rout = null;
 	private Map map;
+	private MapNode destination;
 
 	@Override
 	public void search(Map m, MapNode dest) {
-
+		this.destination = dest;
 		this.map = m;
 		PriorityQueue<MapNode> queue = new PriorityQueue<>(10, new NodeComperator());
-		MapNode start = new MapNode(0, 0);
+		MapNode start = new MapNode(0, 0, 0);
 		start.setNodeStatus("S");
 		start.setRoutCost(0);
 		start.setParant(null);
 		queue.add(start);
 
 		while (queue.size() > 0) {
-			MapNode temp = queue.poll();
+			MapNode curr = queue.poll();
 
-			if (temp.equals(dest)) {
-				this.getRout(temp);
+			if (curr.equals(dest)) {
+				this.getRout(curr);
 				break;
 			} else {
-				Stack<MapNode> list = this.map.getNeighbors(temp);
+				Queue<MapNode> list = this.map.getNeighbors(curr);
 				Iterator<MapNode> iter = list.iterator();
 				while (iter.hasNext()) {
 					MapNode tempi = iter.next();
 					tempi.setNodeStatus(this.map.getNodeStatus(tempi.getX(), tempi.getY()));
-					if (temp.getRoutCost() + this.getCost(tempi) < tempi.getRoutCost()) {
-						tempi.setParant(temp);
-						tempi.setRoutCost(temp.getRoutCost() + this.getCost(tempi));
+					if (!queue.contains(tempi)) {
+						if (curr.getRoutCost() + this.calcHeuristicCost(tempi) + this.getCost(tempi) < tempi.getRoutCost()) {
+							tempi.setParant(curr);
+							tempi.setRoutCost(curr.getRoutCost() + this.calcHeuristicCost(tempi) + this.getCost(tempi));
+						}
+						queue.add(tempi);
 					}
-					queue.add(tempi);
 				}
 			}
-
 		}
 		System.out.print("finish");
+	}
 
+	private double calcHeuristicCost(MapNode node) {
+		int xDist = node.getX() - this.destination.getX();
+		int yDist = node.getY() - this.destination.getY();
+		double squre = Math.pow(xDist, 2) + Math.pow(yDist, 2);
+		return Math.sqrt(squre);
 	}
 
 	private void getRout(MapNode node) {
@@ -57,7 +66,7 @@ public class UCS_Searcher implements Searcher {
 				if (!currStrVal.equals("G")) { //todo fix
 					temp1 += "-";
 				}
-				temp1 +=  this.rout;
+				temp1 += this.rout;
 				this.rout = temp1;
 				node = node.getParant();
 				if (temp.equals("S")) { //todo fix

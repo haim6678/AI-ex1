@@ -10,12 +10,23 @@ public class NodeComperator implements Comparator<MapNode> {
 		int o2value = getValue(o2.getNodeStatus());
 
 		if (o1value == o2value) {
-			return 0;
+			int temp = calcEvenValu(o1, o2);
+			return temp;
 		}
 		if (o1value > o2value) {
 			return 1;
 		}
 		return -1;
+	}
+
+	private int calcEvenValu(MapNode o1, MapNode o2) {
+		if (o1.getCreationTime() > o2.getCreationTime()) {
+			return 1;
+		} else if (o1.getCreationTime() < o2.getCreationTime()) {
+			return -1;
+		} else {
+			return 0;
+		}
 	}
 
 	private int getValue(String s) {

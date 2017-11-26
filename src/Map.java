@@ -1,6 +1,4 @@
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Stack;
+import java.util.*;
 
 /**
  * Created by haim on 24/11/2017.
@@ -21,38 +19,55 @@ public class Map {
 
 	}
 
-	public Stack<MapNode> getNeighbors(MapNode node) {
+	public Queue<MapNode> getNeighbors(MapNode node) {
 
 		int x = node.getX();
 		int y = node.getY();
-		Stack<MapNode> list = new Stack<MapNode>();
-		//forward
-		if ((x + 1 < size) && (!map[x + 1][y].equals("W"))) {
-			list.push(new MapNode(x + 1, y));
-		}
+		int time = node.getCreationTime() + 1;
+		Queue<MapNode> list = new LinkedList<>();
+
+		//right
 		if ((y + 1 < size) && (!map[x][y + 1].equals("W"))) {
-			list.push(new MapNode(x, y + 1));
+			list.add(new MapNode(x, y + 1, time));
 		}
-		if ((x - 1 >= 0) && (map[x - 1][y].equals("W"))) {
-			list.push(new MapNode(x - 1, y));
+		//down right
+		if ((y + 1 < size) && (x + 1 < size) && (!map[x + 1][y + 1].equals("W"))) {
+			if ((!map[x][y + 1].equals("W")) && (!map[x + 1][y].equals("W"))){
+				list.add(new MapNode(x + 1, y + 1, time));
+			}
 		}
+		//down
+		if ((x + 1 < size) && (!map[x + 1][y].equals("W"))) {
+			list.add(new MapNode(x + 1, y, time));
+		}
+		//down left
+		if ((y - 1 >= 0) && (x + 1 < size) && (!map[x + 1][y - 1].equals("W"))) {
+			if ((!map[x + 1][y].equals("W")) && (!map[x][y - 1].equals("W"))) {
+				list.add(new MapNode(x + 1, y - 1, time));
+			}
+		}
+		//left
 		if ((y - 1 >= 0) && (map[x][y - 1].equals("W"))) {
-			list.push(new MapNode(x, y - 1));
+			list.add(new MapNode(x, y - 1, time));
+		}
+		//left up
+		if ((y - 1 >= 0) && (x - 1 >= 0) && (!map[x - 1][y - 1].equals("W"))) {
+			if ((!map[x - 1][y].equals("W")) && (!map[x][y - 1].equals("W"))) {
+				list.add(new MapNode(x - 1, y - 1, time));
+			}
+		}
+		//up
+		if ((x - 1 >= 0) && (map[x - 1][y].equals("W"))) {
+
+			list.add(new MapNode(x - 1, y, time));
+		}
+		//up right
+		if ((y + 1 < size) && (x - 1 >= 0) && (!map[x - 1][y + 1].equals("W"))) {
+			if ((!map[x - 1][y].equals("W")) && (!map[x][y + 1].equals("W"))) {
+				list.add(new MapNode(x - 1, y + 1, time));
+			}
 		}
 
-		//diagonal
-		if ((y - 1 >= 0) && (x - 1 >= 0) && (!map[x - 1][y - 1].equals("W"))) {
-			list.push(new MapNode(x - 1, y - 1));
-		}
-		if ((y - 1 >= 0) && (x + 1 < size) && (!map[x + 1][y - 1].equals("W"))) {
-			list.push(new MapNode(x + 1, y - 1));
-		}
-		if ((y + 1 < size) && (x - 1 >= 0) && (!map[x - 1][y + 1].equals("W"))) {
-			list.push(new MapNode(x - 1, y + 1));
-		}
-		if ((y + 1 < size) && (x + 1 < size) && (!map[x + 1][y + 1].equals("W"))) {
-			list.push(new MapNode(x + 1, y + 1));
-		}
 		return list;
 	}
 

@@ -20,14 +20,14 @@ public class Main {
 			case "IDS":
 				searcher = new IdsSearcher();
 				break;
-			case "UCS":
+			case "A*":
 				searcher = new UCS_Searcher();
 				break;
 			default:
 				System.out.print("no such search algorithm");
 				return;
 		}
-		MapNode dest = new MapNode(m.getSize()-1, m.getSize()-1);
+		MapNode dest = new MapNode(m.getSize()-1, m.getSize()-1,0);
 		searcher.search(m,dest);
 		return;
 

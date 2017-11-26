@@ -7,8 +7,9 @@ public class MapNode {
 	private int x;
 	private int y;
 
+	private int creationTime;
 
-	private int routCost = Integer.MAX_VALUE;
+	private double routCost = Integer.MAX_VALUE;
 
 
 	private String nodeStatus;
@@ -18,7 +19,7 @@ public class MapNode {
 	private MapNode parant = null;
 
 
-	public MapNode(int x_loc, int y_loc) {
+	public MapNode(int x_loc, int y_loc,int create) {
 
 		this.x = x_loc;
 		this.y = y_loc;
@@ -30,11 +31,11 @@ public class MapNode {
 		return (((MapNode) o).getX() == this.x) && (((MapNode) o).getY() == this.y);
 	}
 
-	public void setRoutCost(int routCost) {
+	public void setRoutCost(double routCost) {
 		this.routCost = routCost;
 	}
 
-	public int getRoutCost() {
+	public double getRoutCost() {
 		return routCost;
 	}
 
@@ -58,6 +59,13 @@ public class MapNode {
 
 	public String getNodeStatus() {
 		return nodeStatus;
+	}
+
+	public void setCreationTime(int creationTime) {
+		this.creationTime = creationTime+1;
+	}
+	public int getCreationTime() {
+		return creationTime;
 	}
 
 	public void setNodeStatus(String nodeStatus) {
