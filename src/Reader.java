@@ -2,11 +2,16 @@ import java.io.BufferedReader;
 import java.io.FileReader;
 import java.util.Scanner;
 
+/**
+ * reads the input file
+ */
 public class Reader {
 
 
+	/**
+	 *reads and returns the search type requested
+	 */
 	public String readSearchType(String path) {
-
 		String line = null;
 		try (Scanner in = new Scanner(new FileReader(path))) {
 			StringBuilder sb = new StringBuilder();
@@ -19,9 +24,10 @@ public class Reader {
 
 	}
 
+	/**
+	 *reads and returns the map we are working on
+	 */
 	public Map read(String path) {
-
-
 		Map map = null;
 
 		try (BufferedReader br = new BufferedReader(new FileReader(path))) {

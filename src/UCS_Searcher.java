@@ -35,6 +35,9 @@ public class UCS_Searcher implements Searcher {
 			} else {
 				this.time++;
 				Stack<MapNode> list = this.map.getNeighbors(curr, time);
+				//for every neighbor if he is not in the queue
+				//and the rout to him from curr node is smaller then current cost
+				//enter him to queue
 				for (MapNode tempi : list) {
 					tempi.setNodeStatus(this.map.getNodeStatus(tempi.getX(), tempi.getY()));
 					if (!queue.contains(tempi)) {
@@ -54,6 +57,9 @@ public class UCS_Searcher implements Searcher {
 		}
 	}
 
+	/**
+	 *calculate the heuristic value for the node
+	 */
 	private double calcHeuristicCost(MapNode node) {
 		int xDist = node.getX() - this.destination.getX();
 		int yDist = node.getY() - this.destination.getY();
@@ -61,6 +67,9 @@ public class UCS_Searcher implements Searcher {
 		return Math.sqrt(squre);
 	}
 
+	/**
+	 *create the rout string
+	 */
 	private void getRout(MapNode node) {
 		if (this.rout == null) {
 			this.rout = "";
@@ -77,7 +86,6 @@ public class UCS_Searcher implements Searcher {
 				}
 				temp1 += this.rout;
 				this.rout = temp1;
-
 				int x = node.getParant().getX();
 				int y = node.getParant().getY();
 				String temp = this.map.getNodeStatus(x, y);
@@ -90,6 +98,10 @@ public class UCS_Searcher implements Searcher {
 		}
 	}
 
+	/**
+	 * for 2 given node - get the direction you moved
+	 * to get from one to the other
+	 */
 	private String getDirection(MapNode node, MapNode nodeParent) {
 		int curX = node.getX();
 		int curY = node.getY();
@@ -113,6 +125,9 @@ public class UCS_Searcher implements Searcher {
 		return direction;
 	}
 
+	/**
+	 *for a given node get the cost to move to him
+	 */
 	private int getCost(MapNode node) {
 		int x = node.getX();
 		int y = node.getY();

@@ -4,6 +4,7 @@ import java.util.Stack;
 
 
 public class IdsSearcher implements Searcher {
+	//local variables
 	private int cost = 0;
 	private boolean found = false;
 	private String rout = null;
@@ -11,20 +12,28 @@ public class IdsSearcher implements Searcher {
 	private Map map;
 	private Stack<MapNode> pruningStack;
 
+	//start searching
+
+	/**
+	 *the main function that calls the dfs function until the
+	 * max depth
+	 */
 	@Override
 	public void search(Map m, MapNode dest) {
 		this.map = m;
 		this.desination = dest;
 		int depth = m.getSize();
-
+		//increace the depth every iteration
 		for (int i = 0; i <= depth; i++) {
 			this.pruningStack = new Stack<>();
 			this.pruningStack.push(m.getStart());
+			//call the dfs function
 			IdsHelper(m, i);
 			if (found) {
 				break;
 			}
 		}
+		//print the output
 		if (this.rout != null) {
 			System.out.print(this.rout + " " + Integer.toString(this.cost));
 		} else {
@@ -32,12 +41,17 @@ public class IdsSearcher implements Searcher {
 		}
 	}
 
+	/**
+	 *search with normal dfs
+	 * only limited to the current depth
+	 */
 	private void IdsHelper(Map m, int level_limit) {
 
 		MapNode curr = null;
 		do {
 			curr = pruningStack.pop();
 
+			//found the destination
 			if (curr.equals(this.desination)) {
 				this.createRout(curr);
 				found = true;
@@ -46,6 +60,7 @@ public class IdsSearcher implements Searcher {
 			Stack<MapNode> temp = m.getNeighbors(curr, 0);
 			while (!temp.empty()){
 				MapNode t= temp.pop();
+				//if it's not in the open stack then push it
 				if (t.getLevel() <= level_limit) {
 					if (!this.pruningStack.contains(t)) {
 						t.setParant(curr);
@@ -58,12 +73,15 @@ public class IdsSearcher implements Searcher {
 	}
 
 
+	/**
+	 *create the rout string
+	 */
 	private void createRout(MapNode node) {
 		if (this.rout == null) {
 			this.rout = "";
 			String t ="";
+			//uterate until you reach the start and build the rout
 			do {
-
 				t = getDirection(node, node.getParant());
 				t += this.rout;
 				this.rout = t;
@@ -87,6 +105,10 @@ public class IdsSearcher implements Searcher {
 		}
 	}
 
+	/**
+	 *for 2 given node - get the direction you moved
+	 * to get from one to the other
+	 */
 	private String getDirection(MapNode node, MapNode nodeParent) {
 		int curX = node.getX();
 		int curY = node.getY();
@@ -110,6 +132,9 @@ public class IdsSearcher implements Searcher {
 		return direction;
 	}
 
+	/**
+	 *for a given node get the cost to move to him
+	 */
 	private int getCost(String node) {
 		int val = 0;
 
@@ -124,10 +149,10 @@ public class IdsSearcher implements Searcher {
 				val = 10;
 				break;
 			case "S":
-				val = 0; //todo check!!
+				val = 0;
 				break;
 			case "G":
-				val = 0; //todo check!!
+				val = 0;
 				break;
 			default:
 				int temp = 0;

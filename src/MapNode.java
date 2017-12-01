@@ -6,22 +6,17 @@ public class MapNode {
 
 	private int x;
 	private int y;
-
 	private int creationTime;
-
-
-
 	private int priority;
 	private double routCost = Integer.MAX_VALUE;
-
-
 	private String nodeStatus;
-
 	private int noedeLevel;
-
 	private MapNode parant = null;
 
 
+	/**
+	 * the constructor
+	 */
 	public MapNode(int x_loc, int y_loc, int create, int prio, int level) {
 
 		this.x = x_loc;
@@ -31,11 +26,16 @@ public class MapNode {
 		this.noedeLevel = level;
 	}
 
+	/**
+	 * override equal function
+	 */
 	@Override
 	public boolean equals(Object o) {
 
 		return (((MapNode) o).getX() == this.x) && (((MapNode) o).getY() == this.y);
 	}
+
+	/* getters and setters*/
 
 	public void setRoutCost(double routCost) {
 		this.routCost = routCost;
@@ -45,7 +45,6 @@ public class MapNode {
 		return routCost;
 	}
 
-
 	public int getX() {
 		return x;
 	}
@@ -54,17 +53,13 @@ public class MapNode {
 		return y;
 	}
 
-	public MapNode getParant() {
-		return parant;
-	}
+	public MapNode getParant() {return parant; }
 
 	public void setParant(MapNode parant) {
 		this.parant = parant;
 	}
 
-	public int getLevel(){
-		return this.noedeLevel;
-	}
+	public int getLevel(){return this.noedeLevel;}
 
 	public String getNodeStatus() {
 		return nodeStatus;
@@ -81,7 +76,6 @@ public class MapNode {
 	public void setNodeStatus(String nodeStatus) {
 		this.nodeStatus = nodeStatus;
 	}
-	public int getPriority() {
-		return priority;
-	}
+
+	public int getPriority() { return priority;}
 }

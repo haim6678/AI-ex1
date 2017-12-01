@@ -1,7 +1,10 @@
 import java.util.*;
 
 /**
- * Created by haim on 24/11/2017.
+ * the map class
+ * we are not keeping a classic map of object,
+ * we are just saving the parsed file input for better performance
+ * we are creating the node on demand.
  */
 public class Map {
 	private int targetX;
@@ -10,6 +13,9 @@ public class Map {
 	private int size;
 	private MapNode start;
 
+	/**
+	 *the constructor
+	 */
 	public Map(int mapSize, MapNode startMap, String[][] arr) {
 		this.map = arr;
 		this.size = mapSize;
@@ -19,6 +25,10 @@ public class Map {
 
 	}
 
+	/**
+	 *get the node Neighbors according to the instructions
+	 * received in the exercise
+	 */
 	public Stack<MapNode> getNeighbors(MapNode node, int time) {
 
 		int x = node.getX();
@@ -72,14 +82,23 @@ public class Map {
 		return list;
 	}
 
+	/**
+	 *get start node
+	 */
 	public MapNode getStart() {
 		return this.start;
 	}
 
+	/**
+	 *get node representation
+	 */
 	public String getNodeStatus(int x, int y) {
 		return this.map[x][y];
 	}
 
+	/**
+	 *get map size given in file input
+	 */
 	public int getSize() {
 		return size;
 	}

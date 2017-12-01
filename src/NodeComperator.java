@@ -1,13 +1,17 @@
 import java.util.Comparator;
 
 /**
- * Created by haim on 25/11/2017.
+ * node comparator for the priority queue
+ * implemented according to the instructions in the exercise
  */
 public class NodeComperator implements Comparator<MapNode> {
+	/**
+	 *check who is bigger
+	 */
 	@Override
 	public int compare(MapNode o1, MapNode o2) {
-		int o1value = getValue(o1.getNodeStatus());
-		int o2value = getValue(o2.getNodeStatus());
+		double o1value = o1.getRoutCost();
+		double o2value = o2.getRoutCost();
 
 		if (o1value == o2value) {
 			int temp = calcEvenValu(o1, o2);
@@ -19,6 +23,9 @@ public class NodeComperator implements Comparator<MapNode> {
 		return -1;
 	}
 
+	/**
+	 *if they have even cost then check creation time
+	 */
 	private int calcEvenValu(MapNode o1, MapNode o2) {
 		if (o1.getCreationTime() > o2.getCreationTime()) {
 			return 1;
@@ -29,33 +36,13 @@ public class NodeComperator implements Comparator<MapNode> {
 		}
 	}
 
+	/**
+	 *if they have even creation time then check direction
+	 */
 	private int checkPrior(MapNode o1, MapNode o2) {
 		if (o1.getPriority() > o2.getPriority()) {
 			return 1;
 		}
 		return -1;
-	}
-
-
-	private int getValue(String s) {
-		int val = 0;
-		switch (s) {
-			case "R":
-				val = 1;
-				break;
-			case "D":
-				val = 3;
-				break;
-			case "H":
-				val = 10;
-				break;
-			case "S":
-				val = 0;
-				break;
-			case "G":
-				val = 0; //todo check!!
-				break;
-		}
-		return val;
 	}
 }
