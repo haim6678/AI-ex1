@@ -9,20 +9,26 @@ public class MapNode {
 
 	private int creationTime;
 
+
+
+	private int priority;
 	private double routCost = Integer.MAX_VALUE;
 
 
 	private String nodeStatus;
 
-
+	private int noedeLevel;
 
 	private MapNode parant = null;
 
 
-	public MapNode(int x_loc, int y_loc,int create) {
+	public MapNode(int x_loc, int y_loc, int create, int prio, int level) {
 
 		this.x = x_loc;
 		this.y = y_loc;
+		this.creationTime = create;
+		this.priority = prio;
+		this.noedeLevel = level;
 	}
 
 	@Override
@@ -56,19 +62,26 @@ public class MapNode {
 		this.parant = parant;
 	}
 
+	public int getLevel(){
+		return this.noedeLevel;
+	}
 
 	public String getNodeStatus() {
 		return nodeStatus;
 	}
 
 	public void setCreationTime(int creationTime) {
-		this.creationTime = creationTime+1;
+		this.creationTime = creationTime + 1;
 	}
+
 	public int getCreationTime() {
 		return creationTime;
 	}
 
 	public void setNodeStatus(String nodeStatus) {
 		this.nodeStatus = nodeStatus;
+	}
+	public int getPriority() {
+		return priority;
 	}
 }

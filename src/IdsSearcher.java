@@ -10,13 +10,14 @@ public class IdsSearcher implements Searcher {
 	private MapNode desination;
 	private Map map;
 	private Stack<MapNode> pruningStack;
+
 	@Override
 	public void search(Map m, MapNode dest) {
 		this.map = m;
 		this.desination = dest;
-		int depth = m.getSize() * m.getSize();
+		int depth = m.getSize();
 
-		for (int i = 0; i < 8*25; i++) {
+		for (int i = 0; i <= depth; i++) {
 			this.pruningStack = new Stack<>();
 			this.pruningStack.push(m.getStart());
 			IdsHelper(m, i);
@@ -27,60 +28,62 @@ public class IdsSearcher implements Searcher {
 		if (this.rout != null) {
 			System.out.print(this.rout + " " + Integer.toString(this.cost));
 		} else {
-			System.out.print("no solution");
+			System.out.print("no path");
 		}
 	}
 
 	private void IdsHelper(Map m, int level_limit) {
 
-		MapNode curr = pruningStack.pop();
-		if (curr.equals(this.desination)) {
-			this.createRout(curr);
-			found = true;
-			return;
-		}
-		if (level_limit <= 0) {
-			return;
-		} else {
-			Queue<MapNode> temp = m.getNeighbors(curr);
-			Iterator<MapNode> iter = temp.iterator();
-			while (iter.hasNext()) {
-				MapNode t = iter.next();
-				t.setParant(curr);
-				if (t.equals(this.desination)) {
-					this.createRout(curr);
-					found = true;
-					return;
-				}
-				if (!pruningStack.contains(t)) {
-					pruningStack.push(t);
-				}
-				IdsHelper(m, level_limit - 1);
+		MapNode curr = null;
+		do {
+			curr = pruningStack.pop();
+
+			if (curr.equals(this.desination)) {
+				this.createRout(curr);
+				found = true;
+				return;
 			}
-		}
+			Stack<MapNode> temp = m.getNeighbors(curr, 0);
+			while (!temp.empty()){
+				MapNode t= temp.pop();
+				if (t.getLevel() <= level_limit) {
+					if (!this.pruningStack.contains(t)) {
+						t.setParant(curr);
+						this.pruningStack.push(t);
+					}
+				}
+			}
+		} while (!this.pruningStack.empty());
+
 	}
 
+
 	private void createRout(MapNode node) {
-		if (this.rout == null) { //todo how to fix ?
+		if (this.rout == null) {
 			this.rout = "";
-			rout = getDirection(this.desination,node);
-			while (node.getParant() != null) {
-				String currStrVal = this.map.getNodeStatus(node.getX(), node.getY());
+			String t ="";
+			do {
+
+				t = getDirection(node, node.getParant());
+				t += this.rout;
+				this.rout = t;
+				String temp1 = "";
+				String currStrVal = this.map.getNodeStatus(node.getParant().getX(), node.getParant().getY());
+				if (!currStrVal.equals("S")) {
+					temp1 += "-";
+				}
+				temp1 += this.rout;
+				this.rout = temp1;
+
 				int x = node.getParant().getX();
 				int y = node.getParant().getY();
 				String temp = this.map.getNodeStatus(x, y);
-				String temp1 = getDirection(node, node.getParant());
-				if (!currStrVal.equals("G")) { //todo fix
-					temp1 += "-";
-				}
-				int r=4;
-				temp1 += this.rout;
-				this.rout = temp1;
+
 				node = node.getParant();
-				if (temp.equals("S")) { //todo fix
+				if (temp.equals("S")) {
 					break;
 				}
-			}
+			} while (node.getParant() != null);
 		}
 	}
 
@@ -89,9 +92,9 @@ public class IdsSearcher implements Searcher {
 		int curY = node.getY();
 		int parX = nodeParent.getX();
 		int parY = nodeParent.getY();
-		this.cost+= this.getCost(this.map.getNodeStatus(nodeParent.getX(),nodeParent.getY()));
+		this.cost += this.getCost(this.map.getNodeStatus(nodeParent.getX(), nodeParent.getY()));
 		String direction = "";
-		int x=3;
+		int x = 3;
 		if (curY < parY) {
 			direction += "L";
 		}

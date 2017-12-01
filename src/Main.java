@@ -27,7 +27,7 @@ public class Main {
 				System.out.print("no such search algorithm");
 				return;
 		}
-		MapNode dest = new MapNode(m.getSize()-1, m.getSize()-1,0);
+		MapNode dest = new MapNode(m.getSize()-1, m.getSize()-1,0,0,0);
 		searcher.search(m,dest);
 		return;
 

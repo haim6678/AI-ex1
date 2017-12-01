@@ -9,19 +9,23 @@ import java.util.Stack;
 public class UCS_Searcher implements Searcher {
 	private String rout = null;
 	private Map map;
+	private int cost = 0;
 	private MapNode destination;
+	private int time;
 
 	@Override
 	public void search(Map m, MapNode dest) {
 		this.destination = dest;
 		this.map = m;
+		this.time = -1;
 		PriorityQueue<MapNode> queue = new PriorityQueue<>(10, new NodeComperator());
-		MapNode start = new MapNode(0, 0, 0);
+		MapNode start = new MapNode(0, 0, 0, 0, 0);
+		//set priority fields
 		start.setNodeStatus("S");
 		start.setRoutCost(0);
 		start.setParant(null);
 		queue.add(start);
-
+		//start searching
 		while (queue.size() > 0) {
 			MapNode curr = queue.poll();
 
@@ -29,10 +33,9 @@ public class UCS_Searcher implements Searcher {
 				this.getRout(curr);
 				break;
 			} else {
-				Queue<MapNode> list = this.map.getNeighbors(curr);
-				Iterator<MapNode> iter = list.iterator();
-				while (iter.hasNext()) {
-					MapNode tempi = iter.next();
+				this.time++;
+				Stack<MapNode> list = this.map.getNeighbors(curr, time);
+				for (MapNode tempi : list) {
 					tempi.setNodeStatus(this.map.getNodeStatus(tempi.getX(), tempi.getY()));
 					if (!queue.contains(tempi)) {
 						if (curr.getRoutCost() + this.calcHeuristicCost(tempi) + this.getCost(tempi) < tempi.getRoutCost()) {
@@ -44,7 +47,11 @@ public class UCS_Searcher implements Searcher {
 				}
 			}
 		}
-		System.out.print("finish");
+		if (this.rout != null) {
+			System.out.print(this.rout + " " + Integer.toString(this.cost));
+		} else {
+			System.out.print("no path");
+		}
 	}
 
 	private double calcHeuristicCost(MapNode node) {
@@ -55,24 +62,31 @@ public class UCS_Searcher implements Searcher {
 	}
 
 	private void getRout(MapNode node) {
-		if (this.rout == null) { //todo how to fix ?
+		if (this.rout == null) {
 			this.rout = "";
-			while (node.getParant() != null) {
-				String currStrVal = this.map.getNodeStatus(node.getX(), node.getY());
-				int x = node.getParant().getX();
-				int y = node.getParant().getY();
-				String temp = this.map.getNodeStatus(x, y);
-				String temp1 = getDirection(node, node.getParant());
-				if (!currStrVal.equals("G")) { //todo fix
+			String t = "";
+			do {
+				int a = 3;
+				t = getDirection(node, node.getParant());
+				t += this.rout;
+				this.rout = t;
+				String temp1 = "";
+				String currStrVal = this.map.getNodeStatus(node.getParant().getX(), node.getParant().getY());
+				if (!currStrVal.equals("S")) {
 					temp1 += "-";
 				}
 				temp1 += this.rout;
 				this.rout = temp1;
+
+				int x = node.getParant().getX();
+				int y = node.getParant().getY();
+				String temp = this.map.getNodeStatus(x, y);
+
 				node = node.getParant();
-				if (temp.equals("S")) { //todo fix
+				if (temp.equals("S")) {
 					break;
 				}
-			}
+			} while (node.getParant() != null);
 		}
 	}
 
@@ -81,6 +95,7 @@ public class UCS_Searcher implements Searcher {
 		int curY = node.getY();
 		int parX = nodeParent.getX();
 		int parY = nodeParent.getY();
+		this.cost += this.getCost(nodeParent);
 		String direction = "";
 
 		if (curY < parY) {

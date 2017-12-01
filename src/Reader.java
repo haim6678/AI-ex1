@@ -40,7 +40,7 @@ public class Reader {
 				line = br.readLine();
 			}
 
-			map = new Map(mapsize, new MapNode(0, 0,0), mapStringArr);
+			map = new Map(mapsize, new MapNode(0, 0,0,0,0), mapStringArr);
 
 		} catch (Exception e) {
 			//todo handle error

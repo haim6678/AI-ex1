@@ -25,9 +25,17 @@ public class NodeComperator implements Comparator<MapNode> {
 		} else if (o1.getCreationTime() < o2.getCreationTime()) {
 			return -1;
 		} else {
-			return 0;
+			return checkPrior(o1, o2);
 		}
 	}
+
+	private int checkPrior(MapNode o1, MapNode o2) {
+		if (o1.getPriority() > o2.getPriority()) {
+			return 1;
+		}
+		return -1;
+	}
+
 
 	private int getValue(String s) {
 		int val = 0;
