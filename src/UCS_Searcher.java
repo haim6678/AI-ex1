@@ -12,12 +12,14 @@ public class UCS_Searcher implements Searcher {
 	private int cost = 0;
 	private MapNode destination;
 	private int time;
+	private int timeLimit;
 
 	@Override
-	public void search(Map m, MapNode dest) {
+	public String search(Map m, MapNode dest) {
 		this.destination = dest;
 		this.map = m;
-		this.time = -1;
+		this.time = 0;
+		this.timeLimit = 10* map.getSize() * map.getSize();
 		PriorityQueue<MapNode> queue = new PriorityQueue<>(10, new NodeComperator());
 		MapNode start = new MapNode(0, 0, 0, 0, 0);
 		//set priority fields
@@ -25,9 +27,11 @@ public class UCS_Searcher implements Searcher {
 		start.setRoutCost(0);
 		start.setParant(null);
 		queue.add(start);
+
 		//start searching
-		while (queue.size() > 0) {
+		while ((queue.size() > 0) && (this.time < this.timeLimit)) {
 			MapNode curr = queue.poll();
+			//found the target
 
 			if (curr.equals(dest)) {
 				this.getRout(curr);
@@ -35,12 +39,13 @@ public class UCS_Searcher implements Searcher {
 			} else {
 				this.time++;
 				Stack<MapNode> list = this.map.getNeighbors(curr, time);
+
 				//for every neighbor if he is not in the queue
 				//and the rout to him from curr node is smaller then current cost
 				//enter him to queue
 				for (MapNode tempi : list) {
 					tempi.setNodeStatus(this.map.getNodeStatus(tempi.getX(), tempi.getY()));
-					if (!queue.contains(tempi)) {
+					if (!checkContains(tempi, queue)) {
 						if (curr.getRoutCost() + this.calcHeuristicCost(tempi) + this.getCost(tempi) < tempi.getRoutCost()) {
 							tempi.setParant(curr);
 							tempi.setRoutCost(curr.getRoutCost() + this.calcHeuristicCost(tempi) + this.getCost(tempi));
@@ -51,24 +56,33 @@ public class UCS_Searcher implements Searcher {
 			}
 		}
 		if (this.rout != null) {
-			System.out.print(this.rout + " " + Integer.toString(this.cost));
+			return (this.rout + " " + Integer.toString(this.cost));
 		} else {
-			System.out.print("no path");
+			return null;
 		}
 	}
 
 	/**
-	 *calculate the heuristic value for the node
+	 * checks if an item os in queue
 	 */
-	private double calcHeuristicCost(MapNode node) {
-		int xDist = node.getX() - this.destination.getX();
-		int yDist = node.getY() - this.destination.getY();
-		double squre = Math.pow(xDist, 2) + Math.pow(yDist, 2);
-		return Math.sqrt(squre);
+	private boolean checkContains(MapNode node, PriorityQueue<MapNode> queue) {
+		for (MapNode e : queue) {
+			if (e.equals(node)) {
+				return true;
+			}
+		}
+		return false;
 	}
 
 	/**
-	 *create the rout string
+	 * calculate the heuristic value for the node
+	 */
+	private double calcHeuristicCost(MapNode node) {
+		return Math.max((this.destination.getX() - node.getX()),((this.destination.getY() - node.getY())));
+	}
+
+	/**
+	 * create the rout string
 	 */
 	private void getRout(MapNode node) {
 		if (this.rout == null) {
@@ -126,7 +140,7 @@ public class UCS_Searcher implements Searcher {
 	}
 
 	/**
-	 *for a given node get the cost to move to him
+	 * for a given node get the cost to move to him
 	 */
 	private int getCost(MapNode node) {
 		int x = node.getX();
@@ -145,10 +159,10 @@ public class UCS_Searcher implements Searcher {
 				val = 10;
 				break;
 			case "S":
-				val = 0; //todo check!!
+				val = 0;
 				break;
 			case "G":
-				val = 0; //todo check!!
+				val = 0;
 				break;
 			default:
 				int t = 0;

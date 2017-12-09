@@ -30,7 +30,7 @@ public class Reader {
 	public Map read(String path) {
 		Map map = null;
 
-		try (BufferedReader br = new BufferedReader(new FileReader(path))) {
+		try (BufferedReader br = new BufferedReader(new FileReader("input.txt"))) {
 			StringBuilder sb = new StringBuilder();
 			String line = br.readLine();
 			line = br.readLine();

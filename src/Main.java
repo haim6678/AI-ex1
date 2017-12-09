@@ -1,4 +1,4 @@
-import java.util.PriorityQueue;
+import java.io.PrintWriter;
 
 /**
  * Created by haim on 24/11/2017.
@@ -6,18 +6,18 @@ import java.util.PriorityQueue;
 public class Main {
 
 	/**
-	 *the main function
+	 * the main function
 	 */
 	public static void main(String[] args) {
-
 
 
 		Searcher searcher = null;
 		//read the file
 		Reader reader = new Reader();
-		String filePath = args[0];
+		String filePath = "input.txt";
 		String searchType = reader.readSearchType(filePath);
 		Map m = reader.read(filePath);
+
 
 		//check what kind of search we want
 		switch (searchType) {
@@ -32,7 +32,24 @@ public class Main {
 				return;
 		}
 		//search the map
-		MapNode dest = new MapNode(m.getSize()-1, m.getSize()-1,0,0,0);
-		searcher.search(m,dest);
+		MapNode dest = new MapNode(m.getSize() - 1, m.getSize() - 1, 0, 0, 0);
+		String res = searcher.search(m, dest);
+
+		//print the result
+		PrintWriter writer = null;
+		try {
+
+			writer = new PrintWriter("output.txt", "UTF-8");
+			if (res == null) {
+				writer.println("no path");
+				writer.close();
+				return;
+			}
+			writer.println(res);
+			writer.close();
+
+		} catch (Exception e) {
+			System.out.print("error");
+		}
 	}
 }

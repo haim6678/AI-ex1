@@ -69,7 +69,6 @@ public class Map {
 		}
 		//up
 		if ((x - 1 >= 0) && (map[x - 1][y].equals("W"))) {
-
 			list.push(new MapNode(x - 1, y, time, 7, node.getLevel() + 1));
 		}
 		//up right

@@ -3,5 +3,5 @@
  */
 public interface Searcher {
 
-	public void search(Map m, MapNode dest);
+	public String search(Map m, MapNode dest);
 }

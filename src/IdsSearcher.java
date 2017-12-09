@@ -15,15 +15,15 @@ public class IdsSearcher implements Searcher {
 	//start searching
 
 	/**
-	 *the main function that calls the dfs function until the
+	 * the main function that calls the dfs function until the
 	 * max depth
 	 */
 	@Override
-	public void search(Map m, MapNode dest) {
+	public String search(Map m, MapNode dest) {
 		this.map = m;
 		this.desination = dest;
-		int depth = m.getSize();
-		//increace the depth every iteration
+		int depth = m.getSize() * m.getSize();
+		//increase the depth every iteration
 		for (int i = 0; i <= depth; i++) {
 			this.pruningStack = new Stack<>();
 			this.pruningStack.push(m.getStart());
@@ -35,14 +35,14 @@ public class IdsSearcher implements Searcher {
 		}
 		//print the output
 		if (this.rout != null) {
-			System.out.print(this.rout + " " + Integer.toString(this.cost));
+			return this.rout + " " + Integer.toString(this.cost);
 		} else {
-			System.out.print("no path");
+			return null;
 		}
 	}
 
 	/**
-	 *search with normal dfs
+	 * search with normal dfs
 	 * only limited to the current depth
 	 */
 	private void IdsHelper(Map m, int level_limit) {
@@ -58,8 +58,8 @@ public class IdsSearcher implements Searcher {
 				return;
 			}
 			Stack<MapNode> temp = m.getNeighbors(curr, 0);
-			while (!temp.empty()){
-				MapNode t= temp.pop();
+			while (!temp.empty()) {
+				MapNode t = temp.pop();
 				//if it's not in the open stack then push it
 				if (t.getLevel() <= level_limit) {
 					if (!this.pruningStack.contains(t)) {
@@ -74,13 +74,13 @@ public class IdsSearcher implements Searcher {
 
 
 	/**
-	 *create the rout string
+	 * create the rout string
 	 */
 	private void createRout(MapNode node) {
 		if (this.rout == null) {
 			this.rout = "";
-			String t ="";
-			//uterate until you reach the start and build the rout
+			String t = "";
+			//iterate until you reach the start and build the rout
 			do {
 				t = getDirection(node, node.getParant());
 				t += this.rout;
@@ -106,7 +106,7 @@ public class IdsSearcher implements Searcher {
 	}
 
 	/**
-	 *for 2 given node - get the direction you moved
+	 * for 2 given node - get the direction you moved
 	 * to get from one to the other
 	 */
 	private String getDirection(MapNode node, MapNode nodeParent) {
@@ -133,7 +133,7 @@ public class IdsSearcher implements Searcher {
 	}
 
 	/**
-	 *for a given node get the cost to move to him
+	 * for a given node get the cost to move to him
 	 */
 	private int getCost(String node) {
 		int val = 0;
